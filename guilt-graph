@@ -44,8 +44,8 @@ current="$top"
 
 while [ "$current" != "$base" ]; do
 	pname=`git show-ref | sed -n -e "
-/^$current refs\/patches\/$branch/ {
-	s,^$current refs/patches/$branch/,,
+\\:^$current refs/patches/$branch: {
+	s:^$current refs/patches/$branch/::
 	p
 	q
 }"`
