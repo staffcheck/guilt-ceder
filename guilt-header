@@ -45,10 +45,37 @@ esac
 [ -z "$patch" ] && die "No patches applied."
 
 # check that patch exists in the series
-ret=`get_full_series | grep -e "^$patch\$" | wc -l`
-if [ $ret -eq 0 ]; then
-	die "Patch $patch is not in the series"
+full_series=`get_tmp_file series`
+get_full_series > "$full_series"
+found_patch=
+while read x
+do
+	if [ "$x" = "$patch" ]
+	then
+		found_patch="$patch"
+		break
+	fi
+done < "$full_series"
+if [ -z "$found_patch" ]
+then
+	TMP_MATCHES=`get_tmp_file series`
+	grep "$patch" < "$full_series" > "$TMP_MATCHES"
+	nr=`wc -l < $TMP_MATCHES`
+	if [ $nr -gt 1 ]
+	then
+		echo "$patch does not uniquely identify a patch. Did you mean any of these?" >&2
+		sed 's/^/  /' >&2 "$TMP_MATCHES"
+		rm -f "$TMP_MATCHES"
+		exit 1
+	elif [ $nr -eq 0 ]
+	then
+		rm -f "$TMP_MATCHES"
+		die "Patch $patch is not in the series"
+	fi
+	found_patch=`cat $TMP_MATCHES`
+	rm -f "$TMP_MATCHES"
 fi
+patch="$found_patch"
 
 # FIXME: warn if we're editing an applied patch
 
