@@ -43,7 +43,12 @@ shouldfail guilt new "white space"
 
 cmd list_files
 
-for pname in prepend mode /abc ./blah ../blah abc/./blah abc/../blah abc/. abc/.. abc/ ; do
+for pname in prepend mode /abc ./blah ../blah abc/./blah abc/../blah abc/. \
+	abc/.. abc/ abc.lock a/b.lock/c "cr" "ctrl-a" "formfeed" \
+	"del" "tilde~" "caret^" "colon:" "questionmark?" "asterisk*" \
+	"open[bracket" "consecutive//slashes" "trailing-dot." "bad@{seq" \
+	"@" "backslash\\"
+do
 	shouldfail guilt new "$pname" 2>&1
 
 	cmd list_files
