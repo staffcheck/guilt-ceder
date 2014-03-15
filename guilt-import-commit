@@ -28,7 +28,7 @@ disp "Current head: `cat \"$GIT_DIR\"/refs/heads/\`git_branch\``" >&2
 for rev in `git rev-list $rhash`; do
 	s=`git log --pretty=oneline -1 $rev | cut -c 42-`
 
-	fname=`echo "$s" | sed -e "s/&/and/g" -e "s/[ :]/_/g" -e "s,[/\\],-,g" \
+	fname=`printf %s "$s" | sed -e "s/&/and/g" -e "s/[ :]/_/g" -e "s,[/\\],-,g" \
 			-e "s/['\\[{}]//g" -e 's/]//g' -e 's/\*/-/g' \
 			-e 's/\?/-/g' -e 's/\.\.\.*/./g' -e 's/^\.//' \
                         -e 's/\.patch$//' -e 's/\.$//' | tr A-Z a-z`
