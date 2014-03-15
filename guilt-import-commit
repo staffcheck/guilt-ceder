@@ -26,7 +26,7 @@ disp "About to begin conversion..." >&2
 disp "Current head: `cat \"$GIT_DIR\"/refs/heads/\`git_branch\``" >&2
 
 for rev in `git rev-list $rhash`; do
-	s=`git log --pretty=oneline -1 $rev | cut -c 42-`
+	s=`git log --no-decorate --pretty=oneline -1 $rev | cut -c 42-`
 
 	fname=`printf %s "$s" | sed -e "s/&/and/g" -e "s/[ :]/_/g" -e "s,[/\\],-,g" \
 			-e "s/['\\[{}]//g" -e 's/]//g' -e 's/\*/-/g' \
