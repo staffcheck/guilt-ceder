@@ -132,14 +132,12 @@ fi
 # usage: valid_patchname <patchname>
 valid_patchname()
 {
-	case "$1" in
-		/*|./*|../*|*/./*|*/../*|*/.|*/..|*/|*\ *|*\	*)
-			return 1;;
-		*:*)
-			return 1;;
-		*)
-			return 0;;
-	esac
+	if git check-ref-format --allow-onelevel "$1"
+	then
+		return 0
+	else
+		return 1
+	fi
 }
 
 get_branch()
