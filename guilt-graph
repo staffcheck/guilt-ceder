@@ -58,6 +58,8 @@ while [ "$current" != "$base" ]; do
 }"`
 	[ -z "$pname" ] && pname="?"
 
+	pname="`printf \"%s\" $pname|sed 's/\"/\\\\\"/g'`"
+
 	disp "# checking rev $current"
 	disp "	\"$current\" [label=\"$pname\"]"
 
