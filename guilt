@@ -132,14 +132,21 @@ fi
 # usage: valid_patchname <patchname>
 valid_patchname()
 {
-	case "$1" in
-		/*|./*|../*|*/./*|*/../*|*/.|*/..|*/|*\ *|*\	*)
-			return 1;;
-		*:*)
-			return 1;;
-		*)
-			return 0;;
-	esac
+	if git check-ref-format --allow-onelevel "$1"
+	then
+		# Starting with Git version 1.8.5, a branch cannot be
+		# the single character "@".  Make sure guilt rejects
+		# that name even if we are currently using an older
+		# version of Git.  This ensures that the test suite
+		# runs fine using any version of Git.
+		if [ "$1" = "@" ]
+		then
+			return 1
+		fi
+		return 0
+	else
+		return 1
+	fi
 }
 
 get_branch()
